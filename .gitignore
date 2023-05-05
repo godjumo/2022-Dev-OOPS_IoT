@@ -251,7 +251,12 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+### Espresso ###
+*.esproj
+
 # User Setting
 config.yaml
+.theia
+.skip.esp32C3
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,macos,windows
