@@ -44,11 +44,11 @@
 // 학교 전산실 문제인지 동아리방 와이파이 연결 안됨
 // ESP32-CAM MAC Adress = 54:43:B2:A9:69:CC
 
-// const char* ssid = "twosome2F_2G";
-// const char* password = "twosome1234";
+const char* ssid = "twosome2F_2G";
+const char* password = "twosome1234";
 
-const char* ssid = "PASCUCCI2";
-const char* password = "0000006767A";
+// const char* ssid = "PASCUCCI2";
+// const char* password = "0000006767A";
 
 // const char* ssid = "i-Keeper";
 // const char* password = "iKeeperCERT509D2";
@@ -131,7 +131,7 @@ void setup() {
   }
   // drop down frame size for higher initial frame rate
   if (config.pixel_format == PIXFORMAT_JPEG) {
-    s->set_framesize(s, FRAMESIZE_QVGA);
+    s->set_framesize(s, FRAMESIZE_VAG);
   }
 
 #if defined(CAMERA_MODEL_M5STACK_WIDE) || defined(CAMERA_MODEL_M5STACK_ESP32CAM)
