@@ -15,9 +15,13 @@ def request_commend(be_data : str) :
     if (be_data == "activate") :
         message = {"commend": "activate"}
         requests.post(url, data=message)
+        for i in range(10) :
+            print(f"activate {i}");
     elif (be_data == "deactivate") :
         message = {"commend": "deactivate"}
         requests.post(url, data=message)
+        for j in range(10) :
+            print(f"activate {j}");
 
 
 

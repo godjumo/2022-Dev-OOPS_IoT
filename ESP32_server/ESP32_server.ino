@@ -9,8 +9,8 @@
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
-#include <ESP32Servo.h>
-
+// #include <ESP32Servo.h>
+#include <AccelStepper.h>
 
 AsyncWebServer server(80);
 
@@ -23,8 +23,14 @@ AsyncWebServer server(80);
 // const char* ssid = "AndroidHotspotef_bc_4e";
 // const char* password = "00000000";
 
-const char* ssid = "PASCUCCI2";
-const char* password = "0000006767A";
+// const char* ssid = "PASCUCCI2";
+// const char* password = "0000006767A";
+
+// const char* ssid = "LGWiFi_46EA";
+// const char* password = "2211008369";
+
+const char* ssid = "DevOOPS";
+const char* password = "tlsehdgur";
 
 // const char* ssid = "twosome2F_2G";
 // const char* password = "twosome_1234";
@@ -33,10 +39,20 @@ const char* password = "0000006767A";
 // const char* password = "d2502515";
 
 const char* PARAM_MESSAGE = "commend";
+bool activate_state = NULL;  // 차수벽 가동 상태 True : 차수벽이 올라가있는 상태, False : 차수벽이 내려가있는 상태
+bool wall_activate_flag = NULL;
+bool wall_deactivate_flag = NULL;
 
-Servo servo;
-int pos = 0;
-int servo_pin = 15;
+// Servo servo;
+// int pos = 0;
+// int servo_pin = 15;
+
+#define DIR 13
+#define STEP 12
+// #define ENABLE 14
+
+AccelStepper stepper = AccelStepper(1, STEP, DIR);
+int speed = 1000;
 
 void notFound(AsyncWebServerRequest* request) {
   request->send(404, "text/plain", "Not found");
@@ -60,45 +76,126 @@ void notFound(AsyncWebServerRequest* request) {
 //   request->send_P(200, "text/plain", "OK");
 // }
 
-void servo_activate() {
-  if (pos == 90) {
-    Serial.println("Already Activate");
+// void wall_activate() {
+//   if (pos == 90) {
+//     Serial.println("Already Activate");
+//     return;
+//   } else {
+//     pos = 180;
+//     while (pos != 90) {
+//       servo.write(pos);
+//       delay(15);
+//       pos--;
+//     }
+//   }
+// }
+
+void wall_activate() {
+  if (activate_state == true) {
     return;
-  } else {
-    pos = 180;
-    while (pos != 90) {
-      servo.write(pos);
-      delay(15);
-      pos--;
+  }
+  else {
+    Serial.println("Wall Activate");
+
+    stepper.setSpeed(50);
+    while(stepper.currentPosition() != 400) {
+      stepper.runSpeed();
     }
+    stepper.setSpeed(0);
+
+    activate_state = true;
+    wall_activate_flag = false;
   }
 }
 
-void servo_deactivate() {
-  if (pos == 180) {
-    Serial.println("Already Deactivate");
+// void wall_activate() {
+  
+//   if (activate_state == true){
+//     return;
+//   }
+//   else{
+//     activate_state = true;
+
+//     digitalWrite(DIR, HIGH);
+//     for(int i = 0 ; i < 800 ; i++){
+//       digitalWrite(STEP, HIGH);
+//       delay(1000);
+//       digitalWrite(STEP, LOW);
+//       delay(1000);
+//     }
+//   }
+// }
+
+
+// void wall_deactivate() {
+//   if (pos == 180) {
+//     Serial.println("Already Deactivate");
+//     return;
+//   } else {
+//     pos = 90;
+//     while (pos != 180) {
+//       servo.write(pos);
+//       delay(15);
+//       pos++;
+//     }
+//   }
+// }
+
+void wall_deactivate() {
+  if(activate_state == false) {
     return;
-  } else {
-    pos = 90;
-    while (pos != 180) {
-      servo.write(pos);
-      delay(15);
-      pos++;
+  }
+  else {
+    Serial.println("Wall Deactivate");
+
+    stepper.setSpeed(-50);
+    while(stepper.currentPosition() != -400){
+      stepper.runSpeed();
     }
+    stepper.setSpeed(0);
+
+    activate_state = false;
+    wall_deactivate_flag = false;
   }
 }
 
+// void wall_deactivate() {
+  
+//   if (activate_state == false){
+//     return;
+//   }
+//   else{
+//     activate_state = false;
+
+//     digitalWrite(DIR, LOW);
+//     for(int i = 0 ; i < 800 ; i++){
+//       digitalWrite(STEP, HIGH);
+//       delayMicroseconds(500);
+//       digitalWrite(STEP, LOW);
+//       delayMicroseconds(500);
+//     }
+//   }
+// }
 
 void setup() {
 
   Serial.begin(115200);
 
-  ESP32PWM::allocateTimer(0);
-  ESP32PWM::allocateTimer(1);
-  ESP32PWM::allocateTimer(2);
-  ESP32PWM::allocateTimer(3);
-  servo.setPeriodHertz(50);
-  servo.attach(servo_pin, 500, 2400);
+  // ESP32PWM::allocateTimer(0);
+  // ESP32PWM::allocateTimer(1);
+  // ESP32PWM::allocateTimer(2);
+  // ESP32PWM::allocateTimer(3);
+  // servo.setPeriodHertz(50);
+  // servo.attach(servo_pin, 500, 2400);
+  
+  // pinMode(DIR,OUTPUT);
+  // pinMode(STEP,OUTPUT);
+  // pinMode(ENABLE, OUTPUT);
+
+  // digitalWrite(ENABLE, LOW);
+
+  stepper.setMaxSpeed(200);
+  stepper.setCurrentPosition(0);
 
   WiFi.begin(ssid, password);
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
@@ -150,19 +247,24 @@ void setup() {
     request->send(200, "text/plain", "Request OK");
     // add head json타입으로 받을 수 있게 헤더를 설정해줘야함
     if (value == "activate") {
-      Serial.println("Servo Moter Activate");
-      servo_activate();
+      wall_activate_flag = true;
     } else if (value == "deactivate") {
-      Serial.println("Servo Moter Deactivate");
-      servo_deactivate();
+      wall_deactivate_flag = true;
     }
   });
 
-  // server.on("/post", HTTP_POST, action);
+  // server.on("/post", HTTP_POST, action); 
   server.onNotFound(notFound);
 
   server.begin();
 }
 
 void loop() {
+  if(wall_activate_flag){
+    wall_activate();
+  }
+  if(wall_deactivate_flag){
+    wall_deactivate();
+  }
+  
 }

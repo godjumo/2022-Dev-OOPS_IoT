@@ -20,9 +20,7 @@ def main_page():
 
 @web_gui.route('/data', methods=['POST'])
 def receive_data():
-
     data = request.get_json()
-
     for i in data :
         if i['wallAlertActivation'] and not i['wallAlertDeactivation'] :
             ESP32_request.request_commend('activate')
