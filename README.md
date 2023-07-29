@@ -1,5 +1,4 @@
-
-![254303205-2c708d0a-7f16-4501-8fc8-0b3f5333c2f4](https://github.com/2022-Dev-OOPS/IoT/assets/90409694/ed77a8ec-ff8a-4114-84a9-eb0479faf3f7)
+![254303205-2c708d0a-7f16-4501-8fc8-0b3f5333c2f4](https://github.com/HyeokHam/2022-Dev-OOPS_IoT/assets/90409694/571e8304-9cd6-4ffe-9f66-a7351bc67254)
 
 # IoT
 
