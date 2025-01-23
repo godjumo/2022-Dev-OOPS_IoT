@@ -14,29 +14,8 @@
 
 AsyncWebServer server(80);
 
-// const char* ssid = "i-Keeper";
-// const char* password = "iKeeperCERT509D2";
-
-// const char* ssid = "Cherity-703";
-// const char* password = "dasom4064*";
-
-// const char* ssid = "AndroidHotspotef_bc_4e";
-// const char* password = "00000000";
-
-// const char* ssid = "PASCUCCI2";
-// const char* password = "0000006767A";
-
-// const char* ssid = "LGWiFi_46EA";
-// const char* password = "2211008369";
-
-const char* ssid = "DevOOPS";
-const char* password = "tlsehdgur";
-
-// const char* ssid = "twosome2F_2G";
-// const char* password = "twosome_1234";
-
-// const char* ssid = "d2-502";
-// const char* password = "d2502515";
+// const char* ssid = "***"
+// const char* password = "***"
 
 const char* PARAM_MESSAGE = "commend";
 bool activate_state = NULL;  // 차수벽 가동 상태 True : 차수벽이 올라가있는 상태, False : 차수벽이 내려가있는 상태
