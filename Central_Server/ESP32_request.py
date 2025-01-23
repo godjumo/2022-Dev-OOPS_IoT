@@ -31,7 +31,7 @@ def request_commend(be_data : str) :
 # # Commend init
 # commend = ""
 
-# url = "http://192.168.184.97:80/post"
+# url = "***"
 
 # def request_commend(be_data : str) :
 
